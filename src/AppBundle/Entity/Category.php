@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,6 +36,20 @@ class Category
      */
     private $color;
 
+
+    /**
+     * @var Task[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="category")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     */
+    private $tasks;
+
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -92,6 +107,26 @@ class Category
     public function getColor()
     {
         return $this->color;
+    }
+
+    /**
+     * @return Task[]|ArrayCollection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+
+
+    /**
+     * @param Task $task
+     * @return $this
+     */
+    public function addTask(Task $task)
+    {
+        $this->tasks[]  = $task;
+
+        return $this;
     }
 }
 
