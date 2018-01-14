@@ -13,6 +13,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Task
 {
+
+    const TASK_ACTIVE = 0;
+    const TASK_COMPLETE = 1;
+
     /**
      * @var int
      *
@@ -59,6 +63,12 @@ class Task
      */
     private $updatedAt;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="status", type="smallint")
+     */
+    private $status;
 
     /**
      * @var Category
@@ -66,6 +76,13 @@ class Task
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="tasks")
      */
     private $category;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="tasks")
+     */
+    private $owner;
 
 
     /**
@@ -213,6 +230,44 @@ class Task
     public function setCategory(Category $category)
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param User $owner
+     * @return $this
+     */
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param $status
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status =$status;
 
         return $this;
     }

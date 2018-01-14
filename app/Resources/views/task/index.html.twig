@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <a href="" class="btn btn-default">User</a>
+                </div>
+                <h2 class="text-center">Categories</h2>
+
+                {{ form(addCategoryForm, {'attr': {'class': 'form-inline'}}) }}
+                <br/>
+
+                <ul class="categories">
+                    {% for category in categories%}
+                        <li>{{ category.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-8">
+                <h1 class="text-center">Today is {{ "now"|date("Y-m-d") }}</h1>
+                {% if tasks is empty  %}
+                    <h3 class="text-danger text-center">No task to show</h3>
+                {% else %}
+                    <h3 class="text-center">Upcoming tasks</h3>
+
+                    {% for task in tasks %}
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ task.title  }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ task.expiresAt| date('Y-m-d H:i') }}</h6>
+                                <p class="card-text">{{ task.description }}</p>
+                                <a href="#" class="card-link">Edit</a>
+                                <a href="#" class="card-link">Done</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                {% endif %}
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Add task
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add new task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ form(addTaskForm) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

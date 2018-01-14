@@ -45,6 +45,13 @@ class Category
      */
     private $tasks;
 
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="categories")
+     */
+    private $owner;
+
 
     public function __construct()
     {
@@ -125,6 +132,25 @@ class Category
     public function addTask(Task $task)
     {
         $this->tasks[]  = $task;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param User $owner
+     * @return $this
+     */
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
 
         return $this;
     }
