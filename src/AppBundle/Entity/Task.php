@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Task
@@ -44,6 +45,10 @@ class Task
      * @var \DateTime
      *
      * @ORM\Column(name="expires_at", type="datetime")
+     * @Assert\GreaterThan(
+     *     value="+1 hour",
+     *     message="Expiry date is not valid"
+     * )
      */
     private $expiresAt;
 

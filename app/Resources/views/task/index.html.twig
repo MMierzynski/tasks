@@ -14,7 +14,7 @@
 
                 <ul class="categories">
                     {% for category in categories%}
-                        <li>{{ category.name }}</li>
+                        <li><a href="{{ path('my_task_index', {'cid':category.id}) }}">{{ category.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -26,23 +26,33 @@
                     <h3 class="text-center">Upcoming tasks</h3>
 
                     {% for task in tasks %}
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ task.title  }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ task.expiresAt| date('Y-m-d H:i') }}</h6>
-                                <p class="card-text">{{ task.description }}</p>
-                                <a href="#" class="card-link">Edit</a>
-                                <a href="#" class="card-link">Done</a>
+
+                        {% if date('now') >= date(task.expiresAt) %}
+                            <div class="panel panel-danger">
+                        {% else %}
+                            <div class="panel panel-default">
+                        {% endif %}
+
+                            <div class="panel-body">
+                                {% if date('now') >= date(task.expiresAt) %}
+                                    <h4 class=""><a href="{{ path('my_task_show',{'id': task.id}) }}" class="text-danger">{{ task.title  }}</a> </h4>
+                                    <h6 class="text-danger">{{ task.expiresAt| date('Y-m-d H:i') }}</h6>
+                                {% else %}
+                                    <h4 class=""><a href="{{ path('my_task_show',{'id': task.id}) }}">{{ task.title  }}</a></h4>
+                                    <h6 class="text-muted">{{ task.expiresAt| date('Y-m-d H:i') }}</h6>
+                                {% endif %}
+
+                            </div>
+                            <div class="panel-footer">
+                                <a href="{{ path('my_task_edit',{'id': task.id}) }}" class="btn btn-default">Modify</a>
                             </div>
                         </div>
+
                     {% endfor %}
 
                 {% endif %}
             </div>
         </div>
-
-
-
     </div>
 
     <!-- Button trigger modal -->
@@ -55,19 +65,20 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add new task</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
+                    <h3 class="modal-title text-center" id="exampleModalLabel">Add new task</h3>
                 </div>
                 <div class="modal-body">
-                    {{ form(addTaskForm) }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
+                    {{ form_start(addTaskForm) }}
+                    {{ form_widget(addTaskForm) }}
+                    <input type="submit" class="btn btn-default" name="add" value="Add task">
+                    {{ form_end(addTaskForm) }}
                 </div>
             </div>
         </div>
     </div>
+
+
 {% endblock %}

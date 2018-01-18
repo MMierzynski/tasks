@@ -35,7 +35,8 @@ class TaskType extends AbstractType
                 DateTimeType::class,
                 [
                     'label'=>false,
-                    'attr'=>['placeholder'=>'Expiry date']
+                    'attr'=>['placeholder'=>'Expiry date'],
+                    'data'=> new \DateTime('+ 1 hour')
                 ])
             ->add(
                 'description',
@@ -43,13 +44,8 @@ class TaskType extends AbstractType
                 [
                     'label'=>false,
                     'attr'=>['placeholder'=>'Description']
-                ])
-            ->add(
-                'submit',
-                SubmitType::class,
-                [
-                    'label'=>'Add'
                 ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

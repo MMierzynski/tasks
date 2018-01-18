@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1 class="text-center">Modify your task</h1>
+    <hr>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3    ">
+                {{ form_start(editForm) }}
+                {{ form_widget(editForm) }}
+                <input type="submit" name="save" class="btn btn-default" value="Modify"\>
+                {{ form_end(editForm) }}
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
