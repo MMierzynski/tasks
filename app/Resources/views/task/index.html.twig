@@ -3,34 +3,42 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-3">
-                <div class="text-center">
-                    <a href="" class="btn btn-default">User</a>
+            <div class="col-md-3 left-panel">
+                <div class="user-panel row">
+                    <a href="" class="btn btn-default col-md-8 username" disabled="disabled">{{ username }}</a>
+                    <a href="{{ path('fos_user_security_logout') }}" class="logout btn btn-danger col-md-4" >Wyloguj</a>
                 </div>
-                <h2 class="text-center">Categories</h2>
+                <h2 class="text-center">Kategorie</h2>
 
                 {{ form(addCategoryForm, {'attr': {'class': 'form-inline'}}) }}
                 <br/>
 
                 <ul class="categories">
                     {% for category in categories%}
-                        <li><a href="{{ path('my_task_index', {'cid':category.id}) }}">{{ category.name }}</a></li>
+                        <li><a href="{{ path('my_task_index', {'cid':category.id}) }}" class="btn btn-default btn-block">{{ category.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
-            <div class="col-md-8">
-                <h1 class="text-center">Today is {{ "now"|date("Y-m-d") }}</h1>
+            {% if categories is not empty %}
+            <div class="col-md-8 right-panel">
+                <button type="button" class="btn btn-primary pull-left add-task" data-toggle="modal" data-target="#exampleModal">
+                    Dodaj zadanie
+                </button>
+            {% endif %}
+                <h1 class="text-center">Dzisiaj jest: {{ "now"|date("Y-m-d") }}</h1>
                 {% if tasks is empty  %}
-                    <h3 class="text-danger text-center">No task to show</h3>
+                    <h3 class="text-danger text-center">Brak zadań do wyświetlenia</h3>
                 {% else %}
-                    <h3 class="text-center">Upcoming tasks</h3>
+                    <h3 class="text-center">Zadania do wykonania</h3>
 
+                <hr>
+                    {% set cntr = 0 %}
                     {% for task in tasks %}
 
                         {% if date('now') >= date(task.expiresAt) %}
-                            <div class="panel panel-danger">
+                            <div class="panel panel-danger col-md-6 task-panel">
                         {% else %}
-                            <div class="panel panel-default">
+                            <div class="panel panel-default col-md-6 task-panel">
                         {% endif %}
 
                             <div class="panel-body">
@@ -47,7 +55,7 @@
                                 <a href="{{ path('my_task_edit',{'id': task.id}) }}" class="btn btn-default">Modify</a>
                             </div>
                         </div>
-
+                        {% set cntr = cntr+1 %}
                     {% endfor %}
 
                 {% endif %}
@@ -55,10 +63,6 @@
         </div>
     </div>
 
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        Add task
-    </button>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -68,12 +72,12 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h3 class="modal-title text-center" id="exampleModalLabel">Add new task</h3>
+                    <h3 class="modal-title text-center" id="exampleModalLabel">Dodaj nowe zadanie</h3>
                 </div>
                 <div class="modal-body">
                     {{ form_start(addTaskForm) }}
                     {{ form_widget(addTaskForm) }}
-                    <input type="submit" class="btn btn-default" name="add" value="Add task">
+                    <input type="submit" name="save" class="btn btn-default" value="Dodaj" />
                     {{ form_end(addTaskForm) }}
                 </div>
             </div>

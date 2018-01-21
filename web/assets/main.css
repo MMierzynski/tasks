@@ -1,0 +1,48 @@
+.col-md-6
+{
+    width: 49%;
+}
+
+
+.user-panel
+{
+    margin:10px 5px;
+}
+
+.user-panel .col-md-8
+{
+    width: 65%;
+}
+
+.user-panel .username
+{
+    margin-right: 2px;
+}
+
+.task-panel{
+    border-radius: 0;
+    margin-left:1px;
+    padding: 0;
+}
+
+.right-panel
+{
+    min-height: 100vh;
+    border-left: 1px solid #d5d5d5;
+
+}
+
+.add-task
+{
+    margin-top: 80px;
+}
+ul{
+    margin: 0;
+    padding: 0;
+}
+
+ul li{
+    list-style: none;
+    margin-bottom: 2px;
+    padding: 0;
+}

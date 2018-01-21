@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Task;
+use AppBundle\Entity\User;
 use AppBundle\Form\CategoryType;
 use AppBundle\Form\TaskType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,6 +36,7 @@ class TaskController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $categories = $em->getRepository(Category::class)->findBy(['owner' => $this->getUser()]);
+        $username = $em->getRepository(User::class)->findOneBy(['id'=>$this->getUser()]);
         $cid = $request->query->get('cid');
 
 
@@ -50,6 +52,7 @@ class TaskController extends Controller
             TaskType::class,
             null,
             [
+                'user'=>$this->getUser(),
                'action'=>$this->generateUrl('my_task_add')
             ]);
 
@@ -64,6 +67,7 @@ class TaskController extends Controller
         return $this->render(
             'task/index.html.twig',
             [
+                'username'=>$username,
                 'tasks' => $tasks,
                 'categories' => $categories,
                 'addCategoryForm' => $addCategoryForm->createView(),
@@ -126,7 +130,7 @@ class TaskController extends Controller
     {
         $task = new Task();
 
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task,['user'=>$this->getUser()]);
         $form->handleRequest($request);
 
         if($form->isSubmitted())
@@ -134,12 +138,11 @@ class TaskController extends Controller
             if($form->isValid())
             {
                 $em = $this->getDoctrine()->getManager();
-                $category = $em->getRepository(Category::class)->findOneBy(['id'=>1]);
+                //$category = $em->getRepository(Category::class)->findOneBy(['id'=>1]);
 
                 $task
                     ->setOwner($this->getUser())
-                    ->setStatus(Task::TASK_ACTIVE)
-                    ->setCategory($category);
+                    ->setStatus(Task::TASK_ACTIVE);
 
 
                 $em->persist($task);
@@ -180,13 +183,13 @@ class TaskController extends Controller
      * @Route("/tasks/edit/{id}", name="my_task_edit")
      *
      * @param Task $task
-     * @return RedirectResponse
+     * @return Response
      */
     public function editAction(Task $task, Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $editForm = $this->createForm(TaskType::class, $task);
+        $editForm = $this->createForm(TaskType::class, $task, array('user'=>$this->getUser()));
 
         $editForm->handleRequest($request);
 
