@@ -38,7 +38,16 @@ class TaskController extends Controller
         $categories = $em->getRepository(Category::class)->findBy(['owner' => $this->getUser()]);
         $username = $em->getRepository(User::class)->findOneBy(['id'=>$this->getUser()]);
         $cid = $request->query->get('cid');
+        $selectedCategory = null;
 
+        foreach ($categories as $category)
+        {
+            if($category->getId() == $cid)
+            {
+                $selectedCategory = $category;
+                break;
+            }
+        }
 
         $tasks = $em->getRepository(Task::class)->findBy(['owner' => $this->getUser(),'status'=>Task::TASK_ACTIVE],['expiresAt'=>'ASC']);
 
@@ -67,6 +76,7 @@ class TaskController extends Controller
         return $this->render(
             'task/index.html.twig',
             [
+                'selectedCategory'=>$selectedCategory,
                 'username'=>$username,
                 'tasks' => $tasks,
                 'categories' => $categories,

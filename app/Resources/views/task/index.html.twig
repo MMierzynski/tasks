@@ -2,6 +2,7 @@
 
 {% block body %}
     <div class="container-fluid">
+
         <div class="row">
             <div class="col-md-3 left-panel">
                 <div class="user-panel row">
@@ -14,24 +15,53 @@
                 <br/>
 
                 <ul class="categories">
+                    <li><a href="{{ path('my_task_index') }}" class="btn btn-default btn-block btn-category">Wszystkie</a></li>
+
                     {% for category in categories%}
-                        <li><a href="{{ path('my_task_index', {'cid':category.id}) }}" class="btn btn-default btn-block">{{ category.name }}</a></li>
+                        <li><a href="{{ path('my_task_index', {'cid':category.id}) }}" class="btn btn-default btn-block btn-category" style="border-left:3px solid {{ category.color }};">{{ category.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
-            {% if categories is not empty %}
-            <div class="col-md-8 right-panel">
-                <button type="button" class="btn btn-primary pull-left add-task" data-toggle="modal" data-target="#exampleModal">
-                    Dodaj zadanie
-                </button>
-            {% endif %}
-                <h1 class="text-center">Dzisiaj jest: {{ "now"|date("Y-m-d") }}</h1>
-                {% if tasks is empty  %}
-                    <h3 class="text-danger text-center">Brak zadań do wyświetlenia</h3>
-                {% else %}
-                    <h3 class="text-center">Zadania do wykonania</h3>
 
-                <hr>
+            <div class="col-md-9 right-panel">
+                <div class="top-bar"
+
+                >
+
+
+                    {% if categories is not empty %}
+                        <button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#exampleModal">
+                            <span class="glyphicon glyphicon-plus-sign"></span>
+                            Dodaj zadanie
+                        </button>
+                    {% endif %}
+                    <h4 class="text-right">Dzisiaj jest: {{ "now"|date("Y-m-d") }}</h4>
+                        {% if selectedCategory is not empty %}
+                            <h4 class="text-center text-muted">Kategoria</h4>
+                            <h1 class="text-center">{{ selectedCategory.name }}</h1>
+                        {% else %}
+                            <h4 class="text-center text-muted">Witaj!</h4>
+                            <h1 class="text-center">Co masz dzisiaj w planach?</h1>
+                        {% endif %}
+
+
+                    {% if selectedCategory is not empty %}
+                        <a href="" class="btn btn-default pull-right"><span class="glyphicon glyphicon-edit"></span> Edytuj</a>
+                        <br/>
+                        <hr class="clearfix" style="border-top: 1px solid {{ selectedCategory.color }}"/>
+                    {% else %}
+                        <hr/>
+                    {% endif %}
+
+                    {% if tasks is empty  %}
+                        <h3 class="text-danger text-center">Brak zadań do wyświetlenia</h3>
+                    {% else %}
+                        <h3 class="text-center text-muted">Zadania do wykonania</h3>
+                    {% endif %}
+
+                    </div>
+                <div class="task-grid">
+                {% if tasks is not empty %}
                     {% set cntr = 0 %}
                     {% for task in tasks %}
 
@@ -52,13 +82,14 @@
 
                             </div>
                             <div class="panel-footer">
-                                <a href="{{ path('my_task_edit',{'id': task.id}) }}" class="btn btn-default">Modify</a>
+                                <a href="{{ path('my_task_edit',{'id': task.id}) }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> Edytuj</a>
                             </div>
                         </div>
                         {% set cntr = cntr+1 %}
                     {% endfor %}
 
                 {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -83,6 +114,4 @@
             </div>
         </div>
     </div>
-
-
 {% endblock %}
