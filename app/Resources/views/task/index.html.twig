@@ -24,10 +24,13 @@
             </div>
 
             <div class="col-md-9 right-panel">
-                <div class="top-bar"
 
+                <div class="top-bar "
+                {% if selectedCategory is not empty  %}
+                    style="background-color: {{ selectedCategory.color }}B3"
+                {% endif %}
                 >
-
+                    <div class="top-bar-bg"></div>
 
                     {% if categories is not empty %}
                         <button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#exampleModal">
