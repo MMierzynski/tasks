@@ -6,8 +6,12 @@
         <div class="row">
             <div class="col-md-3 left-panel">
                 <div class="user-panel row">
-                    <a href="" class="btn btn-default col-md-8 username" disabled="disabled">{{ username }}</a>
-                    <a href="{{ path('fos_user_security_logout') }}" class="logout btn btn-danger col-md-4" >Wyloguj</a>
+                    <div class="col-10 border-light">
+                        <h4>{{ username }}</h4>
+                    </div>
+                    <div class="col-2">
+                        <a href="{{ path('fos_user_security_logout') }}" class="logout btn btn-danger offset-4" >Wyloguj</a>
+                    </div>
                 </div>
                 <h2 class="text-center">Kategorie</h2>
 
@@ -18,7 +22,7 @@
                     <li><a href="{{ path('my_task_index') }}" class="btn btn-default btn-block btn-category">Wszystkie</a></li>
 
                     {% for category in categories%}
-                        <li><a href="{{ path('my_task_index', {'cid':category.id}) }}" class="btn btn-default btn-block btn-category" style="border-left:3px solid {{ category.color }};">{{ category.name }}</a></li>
+                        <li><a href="{{ path('my_task_index', {'cid':category.id}) }}" class="btn btn-default btn-block btn-category" style="border: 1px solid {{ category.color }};border-left-width:3px;">{{ category.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -38,23 +42,18 @@
                             Dodaj zadanie
                         </button>
                     {% endif %}
-                    <h4 class="text-right">Dzisiaj jest: {{ "now"|date("Y-m-d") }}</h4>
+                    <h5 class="today-text">Dzisiaj jest: {{ "now"|date("Y-m-d") }}</h5>
                         {% if selectedCategory is not empty %}
-                            <h4 class="text-center text-muted">Kategoria</h4>
-                            <h1 class="text-center">{{ selectedCategory.name }}</h1>
+                            <h5 class="text-center text-muted">Kategoria</h5>
+                            <h3 class="text-center">{{ selectedCategory.name }}</h3>
                         {% else %}
-                            <h4 class="text-center text-muted">Witaj!</h4>
-                            <h1 class="text-center">Co masz dzisiaj w planach?</h1>
+                            <h5 class="text-center text-muted">Witaj!</h5>
+                            <h3 class="text-center">Co masz dzisiaj w planach?</h3>
                         {% endif %}
 
 
-                    {% if selectedCategory is not empty %}
-                        <a href="" class="btn btn-default pull-right"><span class="glyphicon glyphicon-edit"></span> Edytuj</a>
-                        <br/>
-                        <hr class="clearfix" style="border-top: 1px solid {{ selectedCategory.color }}"/>
-                    {% else %}
-                        <hr/>
-                    {% endif %}
+
+                    <hr/>
 
                     {% if tasks is empty  %}
                         <h3 class="text-danger text-center">Brak zadań do wyświetlenia</h3>
@@ -62,35 +61,46 @@
                         <h3 class="text-center text-muted">Zadania do wykonania</h3>
                     {% endif %}
 
-                    </div>
+                </div>
                 <div class="task-grid">
                 {% if tasks is not empty %}
+
                     {% set cntr = 0 %}
                     {% for task in tasks %}
 
+                        {% if cntr == 0 %}
+                            <div class="row no-gutters">
+                        {% endif %}
+                        <div class="col-md-6">
                         {% if date('now') >= date(task.expiresAt) %}
-                            <div class="panel panel-danger col-md-6 task-panel">
+                            <div class="card border-danger task-panel">
                         {% else %}
-                            <div class="panel panel-default col-md-6 task-panel">
+                            <div class="card task-panel">
                         {% endif %}
 
-                            <div class="panel-body">
+                            <div class="card-body">
                                 {% if date('now') >= date(task.expiresAt) %}
-                                    <h4 class=""><a href="{{ path('my_task_show',{'id': task.id}) }}" class="text-danger">{{ task.title  }}</a> </h4>
-                                    <h6 class="text-danger">{{ task.expiresAt| date('Y-m-d H:i') }}</h6>
+                                    <h5 class=""><a href="{{ path('my_task_show',{'id': task.id}) }}" class="card-title text-danger">{{ task.title  }}</a> </h5>
+                                    <h6 class="card-subtitle text-danger">{{ task.expiresAt| date('Y-m-d H:i') }}</h6>
                                 {% else %}
-                                    <h4 class=""><a href="{{ path('my_task_show',{'id': task.id}) }}">{{ task.title  }}</a></h4>
-                                    <h6 class="text-muted">{{ task.expiresAt| date('Y-m-d H:i') }}</h6>
+                                    <h5 class="card-title"><a href="{{ path('my_task_show',{'id': task.id}) }}">{{ task.title  }}</a></h5>
+                                    <h6 class="card-subtitle">{{ task.expiresAt| date('Y-m-d H:i') }}</h6>
                                 {% endif %}
 
                             </div>
-                            <div class="panel-footer">
-                                <a href="{{ path('my_task_edit',{'id': task.id}) }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> Edytuj</a>
+                            <div class="card-footer">
+                                <a href="{{ path('my_task_edit',{'id': task.id}) }}" class="btn btn-primary"><span class="gl"></span> Edytuj</a>
                             </div>
-                        </div>
-                        {% set cntr = cntr+1 %}
-                    {% endfor %}
+                        </div></div>
+                        {% if cntr == 1 %}
+                            </div>
+                            {% set cntr = 0 %}
+                        {% else %}
+                            {% set cntr = cntr+1 %}
+                        {% endif %}
 
+                    {% endfor %}
+                    </div>
                 {% endif %}
                 </div>
             </div>
@@ -103,15 +113,16 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Dodaj nowe zadanie</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h3 class="modal-title text-center" id="exampleModalLabel">Dodaj nowe zadanie</h3>
+
                 </div>
                 <div class="modal-body">
                     {{ form_start(addTaskForm) }}
                     {{ form_widget(addTaskForm) }}
-                    <input type="submit" name="save" class="btn btn-default" value="Dodaj" />
+                    <input type="submit" name="save" class="btn btn-primary" value="Dodaj" />
                     {{ form_end(addTaskForm) }}
                 </div>
             </div>
